@@ -1,4 +1,4 @@
-import 'package:acougue/controleProduto.dart';
+import 'package:acougue/src/models/controleProduto.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';

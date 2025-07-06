@@ -1,4 +1,4 @@
-import 'package:acougue/home.dart';
+import 'package:acougue/src/pages/home.dart';
 import 'package:flutter/material.dart';
 
 void main() {

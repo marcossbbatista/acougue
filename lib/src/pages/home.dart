@@ -1,6 +1,6 @@
-import 'package:acougue/controleProduto.dart';
-import 'package:acougue/widgets/card_info.dart';
-import 'package:acougue/widgets/registro.dart';
+import 'package:acougue/src/models/controleProduto.dart';
+import 'package:acougue/src/widgets/card_info.dart';
+import 'package:acougue/src/pages/registro.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -15,8 +15,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(title: Text('BitBoi')),
       body: produto.isEmpty

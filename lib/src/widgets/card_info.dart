@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:acougue/controleProduto.dart';
+import 'package:acougue/src/models/controleProduto.dart';
 
 class CardInfo extends StatelessWidget {
   const CardInfo({
