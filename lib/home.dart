@@ -15,7 +15,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final larguraTela = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(title: Text('BitBoi')),
       body: produto.isEmpty
@@ -31,38 +32,33 @@ class _HomeState extends State<Home> {
                     'Produtos são listados por ordem de validade.'
                     ' Datas em vermelho indicam vencimento em até 10 dias.',
                   ),
-                  SizedBox(height: 12),
                   Expanded(
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: produto.length,
                       itemBuilder: (context, index) {
-                        return Container(
-                          width: larguraTela / 3,
-                          margin: EdgeInsets.only(right: 8),
-                          child: CardInfo(
-                            produto: produto[index],
-                            onEdit: () async {
-                              final produtoEditado = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) =>
-                                      Registro(produto: produto[index]),
-                                ),
-                              );
+                        return CardInfo(
+                          produto: produto[index],
+                          onEdit: () async {
+                            final produtoEditado = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    Registro(produto: produto[index]),
+                              ),
+                            );
 
-                              if (produtoEditado != null) {
-                                setState(() {
-                                  produto[index] = produtoEditado;
-                                });
-                              }
-                            },
-                            onRemove: () {
+                            if (produtoEditado != null) {
                               setState(() {
-                                produto.removeAt(index);
+                                produto[index] = produtoEditado;
                               });
-                            },
-                          ),
+                            }
+                          },
+                          onRemove: () {
+                            setState(() {
+                              produto.removeAt(index);
+                            });
+                          },
                         );
                       },
                     ),

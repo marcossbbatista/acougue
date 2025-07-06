@@ -75,125 +75,123 @@ class _Registro extends State<Registro> {
       appBar: AppBar(title: Text('Controle de Produto')),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            spacing: 16,
-            children: [
-              TextField(
-                controller: nomeLojaController,
-                decoration: InputDecoration(labelText: 'Loja'),
-                onChanged: (value) => nomeLoja = value,
+        child: Column(
+          spacing: 16,
+          children: [
+            TextField(
+              controller: nomeLojaController,
+              decoration: InputDecoration(labelText: 'Loja'),
+              onChanged: (value) => nomeLoja = value,
+            ),
+            TextField(
+              controller: nomeRecipienteController,
+              decoration: InputDecoration(
+                labelText: 'Nome do Recipiente (Geladeira/Freezer)',
               ),
-              TextField(
-                controller: nomeRecipienteController,
-                decoration: InputDecoration(
-                  labelText: 'Nome do Recipiente (Geladeira/Freezer)',
-                ),
-                onChanged: (value) => nomeRecipiente = value,
+              onChanged: (value) => nomeRecipiente = value,
+            ),
+            TextField(
+              controller: nomeProdutoController,
+              decoration: InputDecoration(labelText: 'Produto'),
+              onChanged: (value) => nomeProduto = value,
+            ),
+            TextField(
+              controller: quantidadeController,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              decoration: InputDecoration(
+                labelText: 'Quantidade Produto (KG/gm)',
               ),
-              TextField(
-                controller: nomeProdutoController,
-                decoration: InputDecoration(labelText: 'Produto'),
-                onChanged: (value) => nomeProduto = value,
-              ),
-              TextField(
-                controller: quantidadeController,
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                decoration: InputDecoration(
-                  labelText: 'Quantidade Produto (KG/gm)',
-                ),
-              ),
+            ),
 
-              CheckboxListTile(
-                title: Text('Moída?'),
-                value: moida,
-                onChanged: (value) {
+            CheckboxListTile(
+              title: Text('Moída?'),
+              value: moida,
+              onChanged: (value) {
+                setState(() {
+                  moida = value ?? false;
+                });
+              },
+            ),
+            TextField(
+              readOnly: true,
+              controller: _dataEntradaController,
+              decoration: InputDecoration(
+                labelText: 'Data de Entrada',
+                hintText: DateFormat('dd/MM/yyyy').format(dataEntrada),
+              ),
+              onTap: () async {
+                final novaData = await showDatePicker(
+                  context: context,
+                  initialDate: dataEntrada,
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2100),
+                );
+
+                if (novaData != null) {
                   setState(() {
-                    moida = value ?? false;
+                    dataEntrada = novaData;
+                    _dataEntradaController.text = DateFormat(
+                      'dd/MM/yyyy',
+                    ).format(novaData);
                   });
-                },
+                }
+              },
+            ),
+
+            TextField(
+              readOnly: true,
+              controller: _dataVencimentoController,
+              decoration: InputDecoration(
+                labelText: 'Data de Vencimento',
+                hintText: DateFormat('dd/MM/yyyy').format(dataVencimento),
               ),
-              TextField(
-                readOnly: true,
-                controller: _dataEntradaController,
-                decoration: InputDecoration(
-                  labelText: 'Data de Entrada',
-                  hintText: DateFormat('dd/MM/yyyy').format(dataEntrada),
-                ),
-                onTap: () async {
-                  final novaData = await showDatePicker(
-                    context: context,
-                    initialDate: dataEntrada,
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                  );
+              onTap: () async {
+                final novaData = await showDatePicker(
+                  context: context,
+                  initialDate: dataVencimento,
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2100),
+                );
 
-                  if (novaData != null) {
-                    setState(() {
-                      dataEntrada = novaData;
-                      _dataEntradaController.text = DateFormat(
-                        'dd/MM/yyyy',
-                      ).format(novaData);
-                    });
-                  }
-                },
+                if (novaData != null) {
+                  setState(() {
+                    dataVencimento = novaData;
+                    _dataVencimentoController.text = DateFormat(
+                      'dd/MM/yyyy',
+                    ).format(novaData);
+                  });
+                }
+              },
+            ),
+            SizedBox(height: 10),
+
+            ElevatedButton(
+              onPressed: () {
+                final novoProduto = ControleProduto(
+                  nomeLoja: nomeLojaController.text,
+                  nomeRecipiente: nomeRecipienteController.text,
+                  nomeProduto: nomeProdutoController.text,
+                  quantidadeProduto:
+                      double.tryParse(
+                        quantidadeController.text.replaceAll(',', '.'),
+                      ) ??
+                      0.0,
+                  moida: moida,
+                  dataEntrada: dataEntrada,
+                  dataVencimento: dataVencimento,
+                );
+
+                Navigator.pop(context, novoProduto);
+              },
+              child: Text('Salvar'),
+              style: ElevatedButton.styleFrom(
+                side: BorderSide(style: BorderStyle.solid),
+                backgroundColor: Colors.yellow,
+                foregroundColor: Colors.black,
               ),
-
-              TextField(
-                readOnly: true,
-                controller: _dataVencimentoController,
-                decoration: InputDecoration(
-                  labelText: 'Data de Vencimento',
-                  hintText: DateFormat('dd/MM/yyyy').format(dataVencimento),
-                ),
-                onTap: () async {
-                  final novaData = await showDatePicker(
-                    context: context,
-                    initialDate: dataVencimento,
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                  );
-
-                  if (novaData != null) {
-                    setState(() {
-                      dataVencimento = novaData;
-                      _dataVencimentoController.text = DateFormat(
-                        'dd/MM/yyyy',
-                      ).format(novaData);
-                    });
-                  }
-                },
-              ),
-              SizedBox(height: 10),
-
-              ElevatedButton(
-                onPressed: () {
-                  final novoProduto = ControleProduto(
-                    nomeLoja: nomeLojaController.text,
-                    nomeRecipiente: nomeRecipienteController.text,
-                    nomeProduto: nomeProdutoController.text,
-                    quantidadeProduto:
-                        double.tryParse(
-                          quantidadeController.text.replaceAll(',', '.'),
-                        ) ??
-                        0.0,
-                    moida: moida,
-                    dataEntrada: dataEntrada,
-                    dataVencimento: dataVencimento,
-                  );
-
-                  Navigator.pop(context, novoProduto);
-                },
-                child: Text('Salvar'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                ),
-              ),
-              SizedBox(height: 32),
-            ],
-          ),
+            ),
+            SizedBox(height: 32),
+          ],
         ),
       ),
     );
