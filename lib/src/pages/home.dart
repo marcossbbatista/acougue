@@ -1,4 +1,4 @@
-import 'package:acougue/src/models/controleProduto.dart';
+import 'package:acougue/src/models/controle_produto.dart';
 import 'package:acougue/src/widgets/card_info.dart';
 import 'package:acougue/src/pages/registro.dart';
 import 'package:flutter/material.dart';
@@ -11,77 +11,109 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<ControleProduto> produto = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('BitBoi')),
-      body: produto.isEmpty
-          ? Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Center(child: Text('Nenhum dado cadastrado')),
-            )
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Text(
-                    'Produtos são listados por ordem de validade.'
-                    ' Datas em vermelho indicam vencimento em até 10 dias.',
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: produto.length,
-                      itemBuilder: (context, index) {
-                        return CardInfo(
-                          produto: produto[index],
-                          onEdit: () async {
-                            final produtoEditado = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    Registro(produto: produto[index]),
-                              ),
-                            );
-
-                            if (produtoEditado != null) {
-                              setState(() {
-                                produto[index] = produtoEditado;
-                              });
-                            }
-                          },
-                          onRemove: () {
-                            setState(() {
-                              produto.removeAt(index);
-                            });
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
+      backgroundColor: const Color(0xFFF3F6FA), // cinza bem claro
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF1976D2), // azul moderno
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+        ),
+        centerTitle: true,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.store, color: Colors.white, size: 32),
+            SizedBox(width: 12),
+            Text(
+              'BitBoi',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
               ),
             ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.yellow,
-        onPressed: () async {
-          final novoCadastro = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Registro()),
-          );
-          if (novoCadastro != null) {
-            setState(() {
-              produto.add(novoCadastro);
-              produto.sort(
-                (a, b) => a.dataVencimento.compareTo(b.dataVencimento),
+          ],
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: IconButton(
+                icon: Icon(
+                  Icons.add,
+                  color: Color(0xFF1976D2),
+                  semanticLabel: 'Adicionar Produto',
+                ),
+                onPressed: () async {
+                  final novoCadastro = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Registro()),
+                  );
+                  if (novoCadastro != null) {
+                    setState(() {
+                      listaControleProduto.add(novoCadastro);
+                      listaControleProduto.sort(
+                        (a, b) => a.dataVencimento.compareTo(b.dataVencimento),
+                      );
+                    });
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: ListView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: listaControleProduto.length,
+        itemBuilder: (context, index) {
+          return CardInfo(
+            produto: listaControleProduto[index],
+            onEdit: () async {
+              final produtoEditado = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>
+                      Registro(produto: listaControleProduto[index]),
+                ),
               );
-            });
-          }
+
+              if (produtoEditado != null) {
+                setState(() {
+                  listaControleProduto[index] = produtoEditado;
+                });
+              }
+            },
+            onRemove: () async {
+              final confirm = await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Remover produto'),
+                  content: Text('Tem certeza que deseja remover este produto?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: Text('Cancelar'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: Text('Remover'),
+                    ),
+                  ],
+                ),
+              );
+              if (confirm == true) {
+                setState(() {
+                  listaControleProduto.removeAt(index);
+                });
+              }
+            },
+          );
         },
-        child: Icon(Icons.add),
-        tooltip: 'Adicionar Produto',
       ),
     );
   }

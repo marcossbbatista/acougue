@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:acougue/src/models/controleProduto.dart';
+import 'package:acougue/src/models/controle_produto.dart';
 
 class CardInfo extends StatelessWidget {
   const CardInfo({
@@ -21,84 +21,80 @@ class CardInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 200,
-          child: Card(
-            elevation: 4,
-            margin: EdgeInsets.all(8),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+    return Card(
+      elevation: 4,
+      margin: EdgeInsets.all(8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              produto.nomeProduto,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            child: Padding(
-              padding: EdgeInsets.all(12),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Loja:', style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text(produto.nomeLoja),
-                  SizedBox(height: 4),
-                  Text(
-                    'Recipiente:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(produto.nomeRecipiente),
-                  SizedBox(height: 4),
-                  Text(
-                    'Produto:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(produto.nomeProduto),
-                  SizedBox(height: 4),
-                  Text(
-                    'Quantidade:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(produto.quantidadeProduto.toString()),
-                  SizedBox(height: 4),
-                  Text('Moida:', style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text(produto.moida ? 'Sim' : 'Não'),
-                  SizedBox(height: 4),
-                  Text(
-                    'Entrada:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(DateFormat('dd/MM/yyyy').format(produto.dataEntrada)),
-                  SizedBox(height: 4),
-                  Text(
-                    'Vencimento:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    DateFormat('dd/MM/yyyy').format(produto.dataVencimento),
+            Divider(),
+            _infoRow('Loja:', produto.nomeLoja),
+            _infoRow('Recipiente:', produto.nomeRecipiente),
+            _infoRow('Lote:', produto.lote),
+            _infoRow('Prateleira:', produto.prateleira),
+            _infoRow('Quantidade:', produto.quantidadeProduto.toString()),
+            _infoRow('Moída:', produto.moida ? 'Sim' : 'Não'),
+            _infoRow(
+              'Entrada:',
+              DateFormat('dd/MM/yyyy').format(produto.dataEntrada),
+            ),
+            _infoRow(
+              'Vencimento:',
+              DateFormat('dd/MM/yyyy').format(produto.dataVencimento),
+            ),
+            SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.edit, color: Colors.green),
+                  tooltip: 'Editar',
+                  onPressed: onEdit,
+                ),
+                Chip(
+                  label: Text(
+                    _diasRestantes(produto.dataVencimento) <= 10
+                        ? 'VENCE EM ${_diasRestantes(produto.dataVencimento)} DIAS'
+                        : 'VÁLIDO ATÉ ${DateFormat('dd/MM/yyyy').format(produto.dataVencimento)}',
                     style: TextStyle(
-                      color: _diasRestantes(produto.dataVencimento) <= 10
-                          ? Colors.red
-                          : Colors.green,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        child: Icon(Icons.edit_square, color: Colors.green),
-                        onTap: onEdit,
-                      ),
-                      GestureDetector(
-                        child: Icon(Icons.remove_circle, color: Colors.red),
-                        onTap: onRemove,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                  backgroundColor: _diasRestantes(produto.dataVencimento) <= 10
+                      ? Colors.red
+                      : Colors.green,
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete, color: Colors.red),
+                  tooltip: 'Remover',
+                  onPressed: onRemove,
+                ),
+              ],
             ),
-          ),
+          ],
         ),
-      ],
+      ),
+    );
+  }
+
+  Widget _infoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+          SizedBox(width: 8),
+          Expanded(child: Text(value, overflow: TextOverflow.ellipsis)),
+        ],
+      ),
     );
   }
 }
