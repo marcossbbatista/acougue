@@ -48,6 +48,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    listaControleProduto.sort(
+      (a, b) => a.dataVencimento.compareTo(b.dataVencimento),
+    );
     return Scaffold(
       backgroundColor: const Color(0xFFF3F6FA),
       appBar: AppBar(

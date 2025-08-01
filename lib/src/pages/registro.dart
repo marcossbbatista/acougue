@@ -1,4 +1,6 @@
 import 'package:acougue/src/models/controle_produto.dart';
+import 'package:acougue/src/widgets/build_date_field.dart';
+import 'package:acougue/src/widgets/build_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -128,27 +130,27 @@ class _Registro extends State<Registro> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildTextField(controller: nomeLojaController, label: 'Loja *'),
+            BuildTextField(controller: nomeLojaController, label: 'Loja *'),
             SizedBox(height: 12),
-            _buildTextField(
+            BuildTextField(
               controller: nomeRecipienteController,
               label: 'Recipiente (Geladeira/Freezer) *',
             ),
             SizedBox(height: 12),
-            _buildTextField(
+            BuildTextField(
               controller: nomeProdutoController,
               label: 'Produto *',
             ),
             SizedBox(height: 12),
-            _buildTextField(
+            BuildTextField(
               controller: quantidadeController,
               label: 'Quantidade Produto (KG/gm) *',
               keyboardType: TextInputType.numberWithOptions(decimal: true),
             ),
             SizedBox(height: 12),
-            _buildTextField(controller: loteController, label: 'Lote *'),
+            BuildTextField(controller: loteController, label: 'Lote *'),
             SizedBox(height: 12),
-            _buildTextField(
+            BuildTextField(
               controller: prateleiraController,
               label: 'Prateleira *',
             ),
@@ -167,7 +169,7 @@ class _Registro extends State<Registro> {
               },
             ),
             SizedBox(height: 12),
-            _buildDateField(
+            BuildDateField(
               context: context,
               controller: _dataEntradaController,
               label: 'Data de Entrada',
@@ -182,7 +184,7 @@ class _Registro extends State<Registro> {
               },
             ),
             SizedBox(height: 12),
-            _buildDateField(
+            BuildDateField(
               context: context,
               controller: _dataVencimentoController,
               label: 'Data de Vencimento',
@@ -216,59 +218,6 @@ class _Registro extends State<Registro> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    TextInputType? keyboardType,
-  }) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: Color(0xFF1976D2), width: 2),
-        ),
-      ),
-      keyboardType: keyboardType,
-      textInputAction: TextInputAction.next,
-    );
-  }
-
-  Widget _buildDateField({
-    required BuildContext context,
-    required TextEditingController controller,
-    required String label,
-    required DateTime selectedDate,
-    required ValueChanged<DateTime> onDateSelected,
-  }) {
-    return TextField(
-      readOnly: true,
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        suffixIcon: Icon(Icons.calendar_today, color: Color(0xFF1976D2)),
-      ),
-      onTap: () async {
-        final novaData = await showDatePicker(
-          context: context,
-          initialDate: selectedDate,
-          firstDate: DateTime(2000),
-          lastDate: DateTime(2100),
-        );
-        if (novaData != null) {
-          onDateSelected(novaData);
-        }
-      },
     );
   }
 }
