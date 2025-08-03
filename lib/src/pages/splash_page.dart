@@ -14,9 +14,9 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(milliseconds: 100), () {
+    Future.delayed(Duration(seconds: 1), () {
       setState(() {
-        _opacity = 0.1;
+        _opacity = 1.0;
       });
     });
     Future.delayed(const Duration(seconds: 2), () {
